@@ -39,6 +39,62 @@ class Tree(object):
         self.l = None
         self.r = None
         
+    def topView(self):
+        raise Exception("NYI")
+        #left spine trav + cur + right spine trav
+        
+        
+    @staticmethod
+    def levelOrder(root):
+        #Write your code here
+        d = dict()
+        
+        def help(tree, depth):
+            
+            if tree == None:
+                return
+            cur = tree.info
+            help(tree.left, depth+1)
+            if depth in d: d[depth].append(cur)
+            else: d[depth] = [cur]
+            help(tree.right, depth+1)
+        
+        help(root, 0)
+    
+        l = len(d)
+        ans = []
+        for i in range(l):
+            assert(i in d)
+            ans.extend(d[i])
+    
+        for i in range(len(ans)):
+            print(ans[i], end = " ")
+
+     
+    @staticmethod
+    def lcad(ptr1, ptr2):
+        #assert(isinstance(ptr1, Tree) and isinstance(ptr2, Tree))
+        raise Exception("NYI")
+        
+    @staticmethod  
+    def lca(root, v1, v2):
+        
+        def help(tree):
+            
+            if tree == None:
+                return None
+            else:
+                cur = tree.info
+                if v1 > cur and v2 > cur:
+                    return help(tree.right)
+                elif v1 < cur and v2 < cur:
+                    return help(tree.left)
+                else:
+                    return tree
+                    
+        return help(root)
+                    
+        
         
 def isLeaf(tree):
     return tree != None and tree.data != None and tree.l == None and tree.r == None
@@ -243,21 +299,80 @@ class BST(object):
                 return (s, m+1, lsize+rsize+1)
         return help(T)[0]
         
+    @staticmethod
+    def mergeLists(L1, L2):
+        
+        i = 0
+        j = 0
+        k = 0
+        a = len(L1)
+        b = len(L2)
+        L = [None]*(len(L1) + len(L2))
+        
+        while(i < a and j < b):
+            l1cur = L1[i]
+            l2cur = L2[j]
+            if l1cur < l2cur:
+                L[k] = l1cur
+                i+=1
+                k+=1
+            else:
+                L[k] = l2cur
+                j+=1
+                k+=1
+        
+        while(i < a):
+            cur = L1[i]
+            L[k] = cur
+            k+=1
+            i+=1
+            
+        while(j < b):
+            cur = L2[j]
+            L[k] = cur
+            k+=1
+            j+=1
+            
+        assert(L.count(0) == 0)
+        return L
+        
+        
+    @staticmethod
+    def treeFromInorder(L):
+        
+        l = len(L)
+        
+        if l == 0:
+            return None
+        
+        left = L[:l//2]
+        cur = L[l//2]
+        right = L[l//2+1 : ]
+        
+        make = Node(cur)
+        make.l = treeFromInorder(left)
+        make.r = treeFromInorder(right)
+        
+        return make
+        
+        
+    
+        
+        
     def merge1(self, other):
+        # non-destructive
+        #limited space implementation
+        T1 = self.printInorder()
+        T2 = self.printInorder()
         
-        IT1 = self.printInorder()
-        IT2 = other.printInorder()
+        T = mergeLists(T1, T2)
         
-        PT1 = self.printPreorder()
-        PT2 = other.printPreorder()
+        merged = treeFromInorder(T)
         
-        M = mergeLists(IT1, IT2)
-        
-        
-        
-        
+        return merged
         
         
+    
         
     
         
@@ -304,13 +419,64 @@ def testBST():
 testBST()
             
             
-        
-        
-            
-        
+##Hackerrank Huffman Tree        
+import string
+def decodeHuff(root, s):
+    l = len(s)
+    i = 0
+    curnode = root
+    if root == None:
+        print("")
+        return
+
+    while(i < l):
+        cur = s[i]
+        if curnode == None:
+            break
+        if cur == "1":
+                curnode = curnode.right
+               
+        else:
+                curnode = curnode.left
+               
+        i+=1
+
+        if curnode.data.isalnum() or curnode.data in string.punctuation: 
+            print(curnode.data, end = "")
+            curnode = root
+    return
+
+##hackerrank isBST
+
+def check_binary_search_tree_(root):
     
+    if root == None: return True
+    def cmp(x, y):
+        if x == "ni": return "Low"
+        if y == "ni": return "High"
+        if x == "pi": return "High"
+        if y == "pi": return "Low"
+        if x < y: return "Low"
+        elif x > y: return "High"
+        else: return "Eq"
+        
+    def help(tree, lower, upper):
+        #lower and upper bounds of current tree node
+        if tree == None:
+            return True
+        cur = tree.data
+        if cmp(cur, upper) == "Low" and cmp(cur, lower) == "High":
+            rlo = cur
+            rup = upper
+            llo = lower
+            lup = cur
+            return help(tree.left, llo, lup) and help(tree.right, rlo, rup)
+        else: return False
+        
+    return help(root, "ni", "pi")
+        
 
-
+##
 
 
 
