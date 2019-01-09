@@ -266,15 +266,72 @@ class LinkedList():
     def removeDuplicates(self):
         #loop through linked list, add to set, if visited, remove
         raise Exception("Not Yet Implemented")
+        
+        
     
     def opPlus(self):
         raise Exception("Not Yet Implemented")
         
     def reverse(self):
-        raise Exception("Not Yet Implemented")
+        #raise Exception("Not Yet Implemented")
+        
+        p = self.start
+        L = []
+        
+        while(p.next != None):
+            L.append(p.data)
+            p = p.next
+        
+        L.append(p.data)
+        l = len(L)
+        count = 0
+        flag = False
+        while(len(L) != 0):
+            x = L.pop()
+            if not flag:
+                ans = Node(x)
+                flag = True
+            else:
+                ans.next = Node(x)
+            count += 1
+        assert(count == l)
+        n = LinkedList("Single")
+        n.size = count
+        return n
+            
+            
+        
         
     def findCollision(self, other):
-        raise Exception("Not Yet Implemented")
+        #raise Exception("Not Yet Implemented")
+        s1, s2 = self.size, other.size
+        
+        if s1 > s2: chosen, rem = self.start, other.start
+        else: chosen, rem = other.start, self.start
+        diff = abs(s1 - s2)
+        
+        p = chosen
+        startP = p
+        count = 0
+        while(count < diff):
+            p = p.next
+            count += 1
+            
+        startP = p
+        q = rem
+        r = startP
+        while(q != None and r != None):
+            if q == r and q != None:
+                return q
+            q = q.next
+            r = r.next
+        
+        return None
+            
+        
+        
+        
+        
         
     def cyclePoint(self):
         assert(self.kind == "Single")
